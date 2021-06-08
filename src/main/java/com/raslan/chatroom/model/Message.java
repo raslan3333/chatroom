@@ -1,21 +1,16 @@
 package com.raslan.chatroom.model;
 
+import lombok.*;
 
-import lombok.Data;
+import javax.persistence.*;
+import java.io.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
 @Data
-public class Message {
+@Entity
+@Table(name = "message")
+public class Message implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String content;
+    private static final long serialVersionUID = 1L;
 
     public Message() {
     }
@@ -23,5 +18,26 @@ public class Message {
     public Message(String content) {
         this.content = content;
     }
+
+    public Message(Long id, String content, Long roomId, Long userId) {
+        this.id = id;
+        this.content = content;
+        this.roomId = roomId;
+        this.userId = userId;
+    }
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "room_id")
+    private Long roomId;
+
+    @Column(name = "user_id")
+    private Long userId;
 
 }

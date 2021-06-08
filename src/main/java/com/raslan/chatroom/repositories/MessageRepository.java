@@ -1,10 +1,9 @@
 package com.raslan.chatroom.repositories;
 
-import com.raslan.chatroom.model.Message;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import com.raslan.chatroom.model.*;
+import org.springframework.data.jpa.repository.*;
 
-@Repository
-public interface MessageRepository extends CrudRepository<Message, Long> {
+public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpecificationExecutor<Message> {
 
+    Iterable<Message> findAllByRoomId(long id);
 }

@@ -6,14 +6,9 @@ public class UserDto implements Serializable {
     private static final long serialVersionUID = -5118206351761951551L;
 
     private long id;
-    private String userId;
-    private String firstName;
-    private String lastName;
-    private String email;
+    private String username;
     private String password;
     private String encryptedPassword;
-    private String emailVerificationToken;
-    private boolean emailVerificationStatus = false;
 
     public long getId() {
         return id;
@@ -23,36 +18,14 @@ public class UserDto implements Serializable {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -69,22 +42,5 @@ public class UserDto implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
-    }
-
-    public String getEmailVerificationToken() {
-        return emailVerificationToken;
-    }
-
-    public void setEmailVerificationToken(String emailVerificationToken) {
-        this.emailVerificationToken = emailVerificationToken;
-    }
-
-
-    public boolean isEmailVerificationStatus() {
-        return emailVerificationStatus;
-    }
-
-    public void setEmailVerificationStatus(boolean emailVerificationStatus) {
-        this.emailVerificationStatus = emailVerificationStatus;
     }
 }

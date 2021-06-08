@@ -1,9 +1,11 @@
 package com.raslan.chatroom.config;
 
 import com.raslan.chatroom.service.UserService;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,9 +35,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/signup", "/ws-endpoint/**","/topic/messages","/topic", "/app", "/users/test1").permitAll()
+        http.cors().and().csrf().disable().authorizeRequests()
+                .antMatchers("/getRooms","/logout", "/ws-endpoint/**","/topic/messages","/topic", "/app", "/users/test1").permitAll()
+                .antMatchers(HttpMethod.POST,"/signup").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/**","/users").permitAll()
+                .anyRequest().authenticated().and().formLogin()
+                .and().logout().permitAll()
+                .logoutUrl("/logout").logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .and().addFilter(getAuthenticationFilter())
                 .addFilterBefore(new AuthorizationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -48,8 +56,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public AuthenticationFilter getAuthenticationFilter() throws Exception {
         final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
-        filter.setFilterProcessesUrl("/users/login");
+
         return filter;
+    }
+
+
+    @Bean
+    public CorsFilter corsFilter(){
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config= new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
 }

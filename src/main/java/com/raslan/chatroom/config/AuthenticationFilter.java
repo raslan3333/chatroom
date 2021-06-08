@@ -2,9 +2,9 @@ package com.raslan.chatroom.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raslan.chatroom.model.*;
-import com.raslan.chatroom.service.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,13 +29,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
     }
 
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
       try {
           LoginModel loginModel = new ObjectMapper().readValue(request.getInputStream(), LoginModel.class);
           return authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                    loginModel.getEmail(), loginModel.getPassword(), new ArrayList<>()
+                    loginModel.getUsername(), loginModel.getPassword(), new ArrayList<>()
             )
           );
 
@@ -53,7 +54,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setSubject(userName).setExpiration(new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
-        UserService userService = (UserService) SpringApplicationContext.getBeam("userServiceImp");
+        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +token);
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX +token);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
