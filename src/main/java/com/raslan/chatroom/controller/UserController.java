@@ -30,7 +30,7 @@ public class UserController {
         return userRest;
     }*/
 
-    @GetMapping("/all")
+    @GetMapping
     public UserRest getUser(Authentication authentication) {
         UserEntity userEntity = userRepository.findByUsername(authentication.getPrincipal().toString());
         UserRest userRest = new UserRest();

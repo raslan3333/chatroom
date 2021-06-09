@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers("/getRooms","/logout", "/ws-endpoint/**","/topic/messages","/topic", "/app", "/users/test1").permitAll()
                 .antMatchers(HttpMethod.POST,"/signup").permitAll()
+                .antMatchers(HttpMethod.GET, "/users").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/**","/users").permitAll()
                 .anyRequest().authenticated().and().formLogin()
                 .and().logout().permitAll()

@@ -3,6 +3,7 @@ package com.raslan.chatroom.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raslan.chatroom.model.*;
 import com.raslan.chatroom.repositories.*;
+import org.springframework.beans.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -40,24 +41,36 @@ public class MainController {
     }
     @GetMapping("/getMessages/{id}")
     public ArrayList<Message> getMessages(@PathVariable long id){
-        return (ArrayList) messageRepository.findAllByRoomId(id);
+        ArrayList<Message> messages= (ArrayList) messageRepository.findAllByRoomId(id);
+
+
+
+        return messages;
     }
 
-    @RequestMapping(
+/*    @RequestMapping(
             value = "/newmessage",
             method = RequestMethod.POST)
     public void addMessage(@RequestBody Message message){
         System.out.println("messssssssssage");
         messageRepository.save(message);
 
-    }
+    }*/
 
 
     @MessageMapping("/chatroom")
     @SendTo("/topic/messages")
-    public Message message( Message msg) throws Exception {
+    public Message message( Payload payload) throws Exception {
+        Message msg = new Message();
+        UserRest userRest = new UserRest();
+        BeanUtils.copyProperties(payload, msg);
+        UserEntity userEntity = userRepository.findById(payload.getUserId()).get();
+        UserEntity returnedUser = new UserEntity();
+        BeanUtils.copyProperties(userEntity, userRest);
+        BeanUtils.copyProperties(userRest, returnedUser);
+        msg.setUserEntity(returnedUser);
         messageRepository.save(msg);
-        return new Message(msg.getContent());
+        return msg;
     }
 
 

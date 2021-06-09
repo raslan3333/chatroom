@@ -1,13 +1,20 @@
 package com.raslan.chatroom.model;
 
-public class Payload {
-    private String content;
+import javax.persistence.*;
 
-    public Payload() {
+public class Payload {
+
+    private Long id;
+    private String content;
+    private Long roomId;
+    private Long userId;
+
+    public Long getId() {
+        return id;
     }
 
-    public Payload(String content) {
-        this.content = content;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -16,5 +23,21 @@ public class Payload {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

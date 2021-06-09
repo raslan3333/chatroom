@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.*;
+import java.util.*;
 
 @Data
 @Entity
@@ -19,11 +20,10 @@ public class Message implements Serializable {
         this.content = content;
     }
 
-    public Message(Long id, String content, Long roomId, Long userId) {
+    public Message(Long id, String content, Long roomId) {
         this.id = id;
         this.content = content;
         this.roomId = roomId;
-        this.userId = userId;
     }
 
     @Id
@@ -37,7 +37,15 @@ public class Message implements Serializable {
     @Column(name = "room_id")
     private Long roomId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 }
